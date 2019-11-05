@@ -4,11 +4,7 @@ using UnityEngine;
 
 class DialogUI : BaseUI
 {
-    public Anchor anchor;
-    public Rect shape;
     public bool isVisible;
-    private Rect oldShape;
-    private Anchor oldAnchor;
 
     public string label;
     private GUIStyle labelStyle;
@@ -18,8 +14,6 @@ class DialogUI : BaseUI
     // Use this for initialization
     void Start()
     {
-        oldAnchor = anchor;
-        oldShape = shape;
         SetPosition(shape.x, shape.y);
         SetSize(shape.width, shape.height);
         SetAnchor(anchor);
@@ -50,32 +44,20 @@ class DialogUI : BaseUI
         }
     }
 
-    protected override void ReDraw()
+    public override void ReDraw()
     {
-        oldAnchor = anchor;
-        oldShape = shape;
-        SetPosition(shape.x, shape.y);
-        SetSize(shape.width, shape.height);
-        SetAnchor(anchor);
+        base.ReDraw();
 
-        yesButton.shape.Set( GetPosX() + GetWidth() * 0.3f, GetPosY() + GetHeight() * 0.7f, GetWidth() * 0.2f, GetHeight() * 0.15f );
-        noButton.shape.Set( GetPosX() + GetWidth() * 0.7f, GetPosY() + GetHeight() * 0.7f, GetWidth() * 0.2f, GetHeight() * 0.15f );
+        yesButton.ReDraw();
+        //yesButton.shape.Set( GetPosX() + GetWidth() * 0.3f, GetPosY() + GetHeight() * 0.7f, GetWidth() * 0.2f, GetHeight() * 0.15f );
+        noButton.ReDraw();
+        //noButton.shape.Set( GetPosX() + GetWidth() * 0.7f, GetPosY() + GetHeight() * 0.7f, GetWidth() * 0.2f, GetHeight() * 0.15f );
     }
 
     // Update is called once per frame
     void Update()
     {
         base.Update();
-        if (oldAnchor != anchor || oldShape != shape)
-        {
-            ReDraw();
-        }
-        else
-        {
-            oldAnchor = anchor;
-            oldShape = shape;
-        }
-
         VSetVisible(isVisible);
     }
 

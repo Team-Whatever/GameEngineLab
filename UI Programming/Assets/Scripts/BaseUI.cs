@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseUI : MonoBehaviour, IScreenElement {
+    // public properties
+    public Anchor anchor;
+    public Rect shape;
+    private Anchor oldAnchor;
+    private Rect oldShape;
+
+    // internal properties
     private float m_PosX, m_PosY, m_ZOrder;
     private float m_Width, m_Height;
     private bool m_bIsVisible;
@@ -25,6 +32,9 @@ public class BaseUI : MonoBehaviour, IScreenElement {
 
 
     public BaseUI(){
+        oldAnchor = anchor;
+        oldShape = shape;
+
         m_bIsVisible = true;
         m_PosX = m_PosY = 0;
         m_Width = 100;
@@ -40,8 +50,8 @@ public class BaseUI : MonoBehaviour, IScreenElement {
 
     public void SetPosition(float posX, float posY){
         
-        m_PosX = posX;
-        m_PosY = posY;
+        m_PosX = posX * m_ScaleX;
+        m_PosY = posY * m_ScaleY;
     }
 
     public float GetPosX(){
@@ -65,10 +75,26 @@ public class BaseUI : MonoBehaviour, IScreenElement {
         return m_Height;
     }
 
-    protected virtual void ReDraw() { }
+    public virtual void ReDraw() {
+        oldAnchor = anchor;
+        oldShape = shape;
+        SetPosition(shape.x, shape.y);
+        SetSize(shape.width, shape.height);
+        SetAnchor(anchor);
+    }
 
     protected void Update()
     {
+        if (oldAnchor != anchor || oldShape != shape)
+        {
+            ReDraw();
+        }
+        else
+        {
+            oldAnchor = anchor;
+            oldShape = shape;
+        }
+
 #if UNITY_EDITOR
         if (resolution.x != Screen.width || resolution.y != Screen.height)
         {
