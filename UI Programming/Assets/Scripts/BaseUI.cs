@@ -9,7 +9,7 @@ public class BaseUI : MonoBehaviour, IScreenElement {
     private Anchor m_Anchor;
 
     private Vector2 resolution;
-    private float m_ScaleX, m_ScaleY;
+    protected float m_ScaleX, m_ScaleY;
 
     public enum Anchor{
         Top_Left,
@@ -53,8 +53,8 @@ public class BaseUI : MonoBehaviour, IScreenElement {
     }
 
     public void SetSize(float width, float height){
-        m_Width = width;
-        m_Height = height;
+        m_Width = width * m_ScaleX;
+        m_Height = height * m_ScaleY;
     }
 
     public float GetWidth(){
@@ -73,13 +73,10 @@ public class BaseUI : MonoBehaviour, IScreenElement {
         if (resolution.x != Screen.width || resolution.y != Screen.height)
         {
             // do your stuff
-            if( resolution.x > 0 )
-                m_Width *= Screen.width / resolution.x;
-            if( resolution.y > 0 )
-                m_Height *= Screen.height / resolution.y;
-
-            resolution.x = Screen.width;
-            resolution.y = Screen.height;
+            if(Screen.width > 0 )
+                m_ScaleX = Screen.width / resolution.x;
+            if(Screen.height > 0 )
+                m_ScaleY = Screen.height / resolution.y;
 
             ReDraw();
         }
@@ -112,7 +109,7 @@ public class BaseUI : MonoBehaviour, IScreenElement {
                 break;
 
             case Anchor.Bottom_Centre:
-                m_PosX = m_PosX - (m_Height / 2);
+                m_PosX = m_PosX - (m_Width / 2);
                 m_PosY = m_PosY - m_Height;
                 //...
                 break;
